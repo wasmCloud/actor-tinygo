@@ -1,0 +1,1 @@
+wash claims sign echo.wasm -c wasmcloud:httpserver --name "TinyGo Echo" --destination echo_tinygo.wasm
