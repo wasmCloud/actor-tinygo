@@ -1,7 +1,5 @@
 package actor
 
-// import msgpack "github.com/wapc/tinygo-msgpack"
-
 type Transport struct {
 	binding   string
 	namespace string
@@ -12,14 +10,13 @@ func (t *Transport) Send(ctx *Context, msg Message) ([]byte, error) {
 	return r, ok
 }
 
-type Duration struct{}
 type Context struct{}
-type RpcError struct {
-	kind    string
-	message string
+
+/// All services implement this interfaca
+type ServiceDispatch interface {
+	dispatch(ctx *Context, actor interface{}, message Message) (*Message, error)
 }
 
-// TODO: move to core
 type Timestamp struct {
 	// the number of non-leap seconds since unix epoch in UTC
 	Sec int64
@@ -27,14 +24,12 @@ type Timestamp struct {
 	Nsec uint32
 }
 
-// TODO: move to core
 type Document struct{}
 
-// TODO: move to core
-type DocumentRef struct{}
-
-// TODO: move to model
-type CapabilityContractId string
+type RpcError struct {
+	kind    string
+	message string
+}
 
 func NewRpcError(kind string, message string) *RpcError {
 	return &RpcError{kind: kind, message: message}
@@ -64,33 +59,3 @@ func ToActor(actor_id string) Transport {
 		namespace: actor_id,
 	}
 }
-
-/// msgpack deserialize
-func Deserialize(b []byte) (interface{}, error) {
-	return nil, nil
-}
-
-/// msgpack serialize
-func Serialize(val interface{}) []byte {
-	//var sizer msgpack.Sizer
-	//val.Encode(&sizer)
-	//buffer := make([]byte, sizer.Len())
-	//encoder := msgpack.NewEncoder(buffer)
-	//val.Encode(&encoder)
-
-	buffer := make([]byte, 0)
-	return buffer
-}
-
-//type CborEncoder struct{}
-//type CborDecoder struct{}
-
-//func (e *CborEncoder) into_inner() []byte { return nil }
-
-//func CborDecode() (interface{}, error) {
-//	return nil, nil
-//}
-
-//func NewCborEncoder(alloc bool) CborEncoder {
-//	return CborEncoder{}
-//}

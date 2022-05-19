@@ -1,23 +1,22 @@
 package actor
 
 type (
-	Handler   func(payload []byte) ([]byte, error)
-	Handlers  map[string]Handler
+	Handler struct {
+		actor    interface{}
+		service  string
+		dispatch interface{}
+	}
 	HostError struct {
 		message string
 	}
 )
 
-var (
-	allHandlers = Handlers{}
-)
+var allHandlers []Handler
 
-func RegisterHandlers(handlers Handlers) {
-	for name, fn := range handlers {
-		allHandlers[name] = fn
-	}
-}
-
-func RegisterHandler(name string, fn Handler) {
-	allHandlers[name] = fn
+func RegisterHandler(actor interface{}, service string, dispatch interface{}) {
+	allHandlers = append(allHandlers, Handler{
+		actor:    actor,
+		service:  service,
+		dispatch: dispatch,
+	})
 }
