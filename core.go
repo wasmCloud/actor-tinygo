@@ -2,7 +2,7 @@
 package actor
 
 import (
-	"github.com/wapc/tinygo-msgpack" //nolint
+	"github.com/wasmcloud/tinygo-msgpack" //nolint
 )
 
 // List of linked actors for a provider
