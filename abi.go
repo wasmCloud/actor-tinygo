@@ -30,6 +30,12 @@ func HostCall(binding, namespace, operation string, payload []byte) ([]byte, err
 	return response, nil
 }
 
+/// HostError is returned by the host from HostCall
+type HostError struct {
+	message string
+}
+
+/// Error implements the error interface for HostError
 func (e *HostError) Error() string {
 	return "Host error: " + e.message
 }

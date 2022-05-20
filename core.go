@@ -8,6 +8,7 @@ import (
 // List of linked actors for a provider
 type ActorLinks []LinkDefinition
 
+// Encode serializes a ActorLinks using msgpack
 func (o *ActorLinks) Encode(encoder msgpack.Writer) error {
 
 	encoder.WriteArraySize(uint32(len(*o)))
@@ -17,8 +18,9 @@ func (o *ActorLinks) Encode(encoder msgpack.Writer) error {
 
 	return nil
 }
-func DecodeActorLinks(d msgpack.Decoder) (ActorLinks, error) {
 
+// Decode deserializes a ActorLinks using msgpack
+func DecodeActorLinks(d msgpack.Decoder) (ActorLinks, error) {
 	isNil, err := d.IsNextNil()
 	if err == nil && isNil {
 		d.Skip()
@@ -41,22 +43,24 @@ func DecodeActorLinks(d msgpack.Decoder) (ActorLinks, error) {
 
 type ClusterIssuerKey string
 
+// Encode serializes a ClusterIssuerKey using msgpack
 func (o *ClusterIssuerKey) Encode(encoder msgpack.Writer) error {
 	encoder.WriteString(string(*o))
 	return nil
 }
-func DecodeClusterIssuerKey(d msgpack.Decoder) (ClusterIssuerKey, error) {
 
+// Decode deserializes a ClusterIssuerKey using msgpack
+func DecodeClusterIssuerKey(d msgpack.Decoder) (ClusterIssuerKey, error) {
 	val, err := d.ReadString()
 	if err != nil {
 		return "", err
 	}
 	return ClusterIssuerKey(val), nil
-
 }
 
 type ClusterIssuers []ClusterIssuerKey
 
+// Encode serializes a ClusterIssuers using msgpack
 func (o *ClusterIssuers) Encode(encoder msgpack.Writer) error {
 
 	encoder.WriteArraySize(uint32(len(*o)))
@@ -66,8 +70,9 @@ func (o *ClusterIssuers) Encode(encoder msgpack.Writer) error {
 
 	return nil
 }
-func DecodeClusterIssuers(d msgpack.Decoder) (ClusterIssuers, error) {
 
+// Decode deserializes a ClusterIssuers using msgpack
+func DecodeClusterIssuers(d msgpack.Decoder) (ClusterIssuers, error) {
 	isNil, err := d.IsNextNil()
 	if err == nil && isNil {
 		d.Skip()
@@ -86,20 +91,21 @@ func DecodeClusterIssuers(d msgpack.Decoder) (ClusterIssuers, error) {
 		val = append(val, item)
 	}
 	return val, nil
-
 }
 
 // health check request parameter
 type HealthCheckRequest struct {
 }
 
+// Encode serializes a HealthCheckRequest using msgpack
 func (o *HealthCheckRequest) Encode(encoder msgpack.Writer) error {
 	encoder.WriteMapSize(0)
 
 	return nil
 }
-func DecodeHealthCheckRequest(d msgpack.Decoder) (HealthCheckRequest, error) {
 
+// Decode deserializes a HealthCheckRequest using msgpack
+func DecodeHealthCheckRequest(d msgpack.Decoder) (HealthCheckRequest, error) {
 	var val HealthCheckRequest
 	isNil, err := d.IsNextNil()
 	if err != nil {
@@ -118,12 +124,8 @@ func DecodeHealthCheckRequest(d msgpack.Decoder) (HealthCheckRequest, error) {
 			return val, err
 		}
 		switch field {
-
 		default:
 			err = d.Skip()
-			if err != nil {
-				return val, err
-			}
 		}
 		if err != nil {
 			return val, err
@@ -136,11 +138,12 @@ func DecodeHealthCheckRequest(d msgpack.Decoder) (HealthCheckRequest, error) {
 // Return value from actors and providers for health check status
 type HealthCheckResponse struct {
 	// A flag that indicates the the actor is healthy
-	Healthy bool `json:"Healthy"`
+	Healthy bool
 	// A message containing additional information about the actors health
-	Message string `json:"Message"`
+	Message string
 }
 
+// Encode serializes a HealthCheckResponse using msgpack
 func (o *HealthCheckResponse) Encode(encoder msgpack.Writer) error {
 	encoder.WriteMapSize(2)
 	encoder.WriteString("Healthy")
@@ -150,8 +153,9 @@ func (o *HealthCheckResponse) Encode(encoder msgpack.Writer) error {
 
 	return nil
 }
-func DecodeHealthCheckResponse(d msgpack.Decoder) (HealthCheckResponse, error) {
 
+// Decode deserializes a HealthCheckResponse using msgpack
+func DecodeHealthCheckResponse(d msgpack.Decoder) (HealthCheckResponse, error) {
 	var val HealthCheckResponse
 	isNil, err := d.IsNextNil()
 	if err != nil {
@@ -170,16 +174,12 @@ func DecodeHealthCheckResponse(d msgpack.Decoder) (HealthCheckResponse, error) {
 			return val, err
 		}
 		switch field {
-
 		case "Healthy":
 			val.Healthy, err = d.ReadBool()
 		case "Message":
 			val.Message, err = d.ReadString()
 		default:
 			err = d.Skip()
-			if err != nil {
-				return val, err
-			}
 		}
 		if err != nil {
 			return val, err
@@ -191,27 +191,28 @@ func DecodeHealthCheckResponse(d msgpack.Decoder) (HealthCheckResponse, error) {
 
 // initialization data for a capability provider
 type HostData struct {
-	HostId             string        `json:"host_id"`
-	LatticeRpcPrefix   string        `json:"lattice_rpc_prefix"`
-	LinkName           string        `json:"link_name"`
-	LatticeRpcUserJwt  string        `json:"lattice_rpc_user_jwt"`
-	LatticeRpcUserSeed string        `json:"lattice_rpc_user_seed"`
-	LatticeRpcUrl      string        `json:"lattice_rpc_url"`
-	ProviderKey        string        `json:"provider_key"`
-	InvocationSeed     string        `json:"invocation_seed"`
-	EnvValues          HostEnvValues `json:"env_values"`
-	InstanceId         string        `json:"instance_id"`
+	HostId             string
+	LatticeRpcPrefix   string
+	LinkName           string
+	LatticeRpcUserJwt  string
+	LatticeRpcUserSeed string
+	LatticeRpcUrl      string
+	ProviderKey        string
+	InvocationSeed     string
+	EnvValues          HostEnvValues
+	InstanceId         string
 	// initial list of links for provider
-	LinkDefinitions ActorLinks `json:"link_definitions"`
+	LinkDefinitions ActorLinks
 	// list of cluster issuers
-	ClusterIssuers ClusterIssuers `json:"cluster_issuers"`
+	ClusterIssuers ClusterIssuers
 	// Optional configuration JSON sent to a given link name of a provider
 	// without an actor context
-	ConfigJson string `json:"config_json"`
+	ConfigJson string
 	// Host-wide default RPC timeout for rpc messages, in milliseconds.  Defaults to 2000.
-	DefaultRpcTimeoutMs uint64 `json:"default_rpc_timeout_ms"`
+	DefaultRpcTimeoutMs uint64
 }
 
+// Encode serializes a HostData using msgpack
 func (o *HostData) Encode(encoder msgpack.Writer) error {
 	encoder.WriteMapSize(14)
 	encoder.WriteString("host_id")
@@ -245,8 +246,9 @@ func (o *HostData) Encode(encoder msgpack.Writer) error {
 
 	return nil
 }
-func DecodeHostData(d msgpack.Decoder) (HostData, error) {
 
+// Decode deserializes a HostData using msgpack
+func DecodeHostData(d msgpack.Decoder) (HostData, error) {
 	var val HostData
 	isNil, err := d.IsNextNil()
 	if err != nil {
@@ -265,7 +267,6 @@ func DecodeHostData(d msgpack.Decoder) (HostData, error) {
 			return val, err
 		}
 		switch field {
-
 		case "host_id":
 			val.HostId, err = d.ReadString()
 		case "lattice_rpc_prefix":
@@ -296,9 +297,6 @@ func DecodeHostData(d msgpack.Decoder) (HostData, error) {
 			val.DefaultRpcTimeoutMs, err = d.ReadUint64()
 		default:
 			err = d.Skip()
-			if err != nil {
-				return val, err
-			}
 		}
 		if err != nil {
 			return val, err
@@ -311,6 +309,7 @@ func DecodeHostData(d msgpack.Decoder) (HostData, error) {
 // Environment settings for initializing a capability provider
 type HostEnvValues map[string]string
 
+// Encode serializes a HostEnvValues using msgpack
 func (o *HostEnvValues) Encode(encoder msgpack.Writer) error {
 	encoder.WriteMapSize(uint32(len(*o)))
 	for key_o, val_o := range *o {
@@ -320,8 +319,9 @@ func (o *HostEnvValues) Encode(encoder msgpack.Writer) error {
 
 	return nil
 }
-func DecodeHostEnvValues(d msgpack.Decoder) (HostEnvValues, error) {
 
+// Decode deserializes a HostEnvValues using msgpack
+func DecodeHostEnvValues(d msgpack.Decoder) (HostEnvValues, error) {
 	isNil, err := d.IsNextNil()
 	if err != nil && isNil {
 		d.Skip()
@@ -341,24 +341,24 @@ func DecodeHostEnvValues(d msgpack.Decoder) (HostEnvValues, error) {
 		val[k] = v
 	}
 	return val, nil
-
 }
 
 // RPC message to capability provider
 type Invocation struct {
-	Origin        WasmCloudEntity `json:"Origin"`
-	Target        WasmCloudEntity `json:"Target"`
-	Operation     string          `json:"Operation"`
-	Msg           []byte          `json:"Msg"`
-	Id            string          `json:"Id"`
-	EncodedClaims string          `json:"encoded_claims"`
-	HostId        string          `json:"host_id"`
+	Origin        WasmCloudEntity
+	Target        WasmCloudEntity
+	Operation     string
+	Msg           []byte
+	Id            string
+	EncodedClaims string
+	HostId        string
 	// total message size (optional)
-	ContentLength uint64 `json:"content_length"`
+	ContentLength uint64
 	// Open Telemetry tracing support
-	TraceContext TraceContext `json:"TraceContext"`
+	TraceContext TraceContext
 }
 
+// Encode serializes a Invocation using msgpack
 func (o *Invocation) Encode(encoder msgpack.Writer) error {
 	encoder.WriteMapSize(9)
 	encoder.WriteString("Origin")
@@ -386,8 +386,9 @@ func (o *Invocation) Encode(encoder msgpack.Writer) error {
 
 	return nil
 }
-func DecodeInvocation(d msgpack.Decoder) (Invocation, error) {
 
+// Decode deserializes a Invocation using msgpack
+func DecodeInvocation(d msgpack.Decoder) (Invocation, error) {
 	var val Invocation
 	isNil, err := d.IsNextNil()
 	if err != nil {
@@ -406,7 +407,6 @@ func DecodeInvocation(d msgpack.Decoder) (Invocation, error) {
 			return val, err
 		}
 		switch field {
-
 		case "Origin":
 			val.Origin, err = DecodeWasmCloudEntity(d)
 		case "Target":
@@ -427,9 +427,6 @@ func DecodeInvocation(d msgpack.Decoder) (Invocation, error) {
 			val.TraceContext, err = DecodeTraceContext(d)
 		default:
 			err = d.Skip()
-			if err != nil {
-				return val, err
-			}
 		}
 		if err != nil {
 			return val, err
@@ -442,15 +439,16 @@ func DecodeInvocation(d msgpack.Decoder) (Invocation, error) {
 // Response to an invocation
 type InvocationResponse struct {
 	// serialize response message
-	Msg []byte `json:"Msg"`
+	Msg []byte
 	// id connecting this response to the invocation
-	InvocationId string `json:"invocation_id"`
+	InvocationId string
 	// optional error message
-	Error string `json:"Error"`
+	Error string
 	// total message size (optional)
-	ContentLength uint64 `json:"content_length"`
+	ContentLength uint64
 }
 
+// Encode serializes a InvocationResponse using msgpack
 func (o *InvocationResponse) Encode(encoder msgpack.Writer) error {
 	encoder.WriteMapSize(4)
 	encoder.WriteString("Msg")
@@ -464,8 +462,9 @@ func (o *InvocationResponse) Encode(encoder msgpack.Writer) error {
 
 	return nil
 }
-func DecodeInvocationResponse(d msgpack.Decoder) (InvocationResponse, error) {
 
+// Decode deserializes a InvocationResponse using msgpack
+func DecodeInvocationResponse(d msgpack.Decoder) (InvocationResponse, error) {
 	var val InvocationResponse
 	isNil, err := d.IsNextNil()
 	if err != nil {
@@ -484,7 +483,6 @@ func DecodeInvocationResponse(d msgpack.Decoder) (InvocationResponse, error) {
 			return val, err
 		}
 		switch field {
-
 		case "Msg":
 			val.Msg, err = d.ReadByteArray()
 		case "invocation_id":
@@ -495,9 +493,6 @@ func DecodeInvocationResponse(d msgpack.Decoder) (InvocationResponse, error) {
 			val.ContentLength, err = d.ReadUint64()
 		default:
 			err = d.Skip()
-			if err != nil {
-				return val, err
-			}
 		}
 		if err != nil {
 			return val, err
@@ -510,16 +505,17 @@ func DecodeInvocationResponse(d msgpack.Decoder) (InvocationResponse, error) {
 // Link definition for binding actor to provider
 type LinkDefinition struct {
 	// actor public key
-	ActorId string `json:"actor_id"`
+	ActorId string
 	// provider public key
-	ProviderId string `json:"provider_id"`
+	ProviderId string
 	// link name
-	LinkName string `json:"link_name"`
+	LinkName string
 	// contract id
-	ContractId string       `json:"contract_id"`
-	Values     LinkSettings `json:"Values"`
+	ContractId string
+	Values     LinkSettings
 }
 
+// Encode serializes a LinkDefinition using msgpack
 func (o *LinkDefinition) Encode(encoder msgpack.Writer) error {
 	encoder.WriteMapSize(5)
 	encoder.WriteString("actor_id")
@@ -535,8 +531,9 @@ func (o *LinkDefinition) Encode(encoder msgpack.Writer) error {
 
 	return nil
 }
-func DecodeLinkDefinition(d msgpack.Decoder) (LinkDefinition, error) {
 
+// Decode deserializes a LinkDefinition using msgpack
+func DecodeLinkDefinition(d msgpack.Decoder) (LinkDefinition, error) {
 	var val LinkDefinition
 	isNil, err := d.IsNextNil()
 	if err != nil {
@@ -555,7 +552,6 @@ func DecodeLinkDefinition(d msgpack.Decoder) (LinkDefinition, error) {
 			return val, err
 		}
 		switch field {
-
 		case "actor_id":
 			val.ActorId, err = d.ReadString()
 		case "provider_id":
@@ -568,9 +564,6 @@ func DecodeLinkDefinition(d msgpack.Decoder) (LinkDefinition, error) {
 			val.Values, err = DecodeLinkSettings(d)
 		default:
 			err = d.Skip()
-			if err != nil {
-				return val, err
-			}
 		}
 		if err != nil {
 			return val, err
@@ -583,6 +576,7 @@ func DecodeLinkDefinition(d msgpack.Decoder) (LinkDefinition, error) {
 // Settings associated with an actor-provider link
 type LinkSettings map[string]string
 
+// Encode serializes a LinkSettings using msgpack
 func (o *LinkSettings) Encode(encoder msgpack.Writer) error {
 	encoder.WriteMapSize(uint32(len(*o)))
 	for key_o, val_o := range *o {
@@ -592,8 +586,9 @@ func (o *LinkSettings) Encode(encoder msgpack.Writer) error {
 
 	return nil
 }
-func DecodeLinkSettings(d msgpack.Decoder) (LinkSettings, error) {
 
+// Decode deserializes a LinkSettings using msgpack
+func DecodeLinkSettings(d msgpack.Decoder) (LinkSettings, error) {
 	isNil, err := d.IsNextNil()
 	if err != nil && isNil {
 		d.Skip()
@@ -613,12 +608,12 @@ func DecodeLinkSettings(d msgpack.Decoder) (LinkSettings, error) {
 		val[k] = v
 	}
 	return val, nil
-
 }
 
 // Environment settings for initializing a capability provider
 type TraceContext map[string]string
 
+// Encode serializes a TraceContext using msgpack
 func (o *TraceContext) Encode(encoder msgpack.Writer) error {
 	encoder.WriteMapSize(uint32(len(*o)))
 	for key_o, val_o := range *o {
@@ -628,8 +623,9 @@ func (o *TraceContext) Encode(encoder msgpack.Writer) error {
 
 	return nil
 }
-func DecodeTraceContext(d msgpack.Decoder) (TraceContext, error) {
 
+// Decode deserializes a TraceContext using msgpack
+func DecodeTraceContext(d msgpack.Decoder) (TraceContext, error) {
 	isNil, err := d.IsNextNil()
 	if err != nil && isNil {
 		d.Skip()
@@ -649,15 +645,15 @@ func DecodeTraceContext(d msgpack.Decoder) (TraceContext, error) {
 		val[k] = v
 	}
 	return val, nil
-
 }
 
 type WasmCloudEntity struct {
-	PublicKey  string               `json:"public_key"`
-	LinkName   string               `json:"link_name"`
-	ContractId CapabilityContractId `json:"contract_id"`
+	PublicKey  string
+	LinkName   string
+	ContractId CapabilityContractId
 }
 
+// Encode serializes a WasmCloudEntity using msgpack
 func (o *WasmCloudEntity) Encode(encoder msgpack.Writer) error {
 	encoder.WriteMapSize(3)
 	encoder.WriteString("public_key")
@@ -669,8 +665,9 @@ func (o *WasmCloudEntity) Encode(encoder msgpack.Writer) error {
 
 	return nil
 }
-func DecodeWasmCloudEntity(d msgpack.Decoder) (WasmCloudEntity, error) {
 
+// Decode deserializes a WasmCloudEntity using msgpack
+func DecodeWasmCloudEntity(d msgpack.Decoder) (WasmCloudEntity, error) {
 	var val WasmCloudEntity
 	isNil, err := d.IsNextNil()
 	if err != nil {
@@ -689,7 +686,6 @@ func DecodeWasmCloudEntity(d msgpack.Decoder) (WasmCloudEntity, error) {
 			return val, err
 		}
 		switch field {
-
 		case "public_key":
 			val.PublicKey, err = d.ReadString()
 		case "link_name":
@@ -698,9 +694,6 @@ func DecodeWasmCloudEntity(d msgpack.Decoder) (WasmCloudEntity, error) {
 			val.ContractId, err = DecodeCapabilityContractId(d)
 		default:
 			err = d.Skip()
-			if err != nil {
-				return val, err
-			}
 		}
 		if err != nil {
 			return val, err
@@ -714,6 +707,12 @@ func DecodeWasmCloudEntity(d msgpack.Decoder) (WasmCloudEntity, error) {
 type Actor interface {
 	// Perform health check. Called at regular intervals by host
 	HealthRequest(ctx *Context, arg HealthCheckRequest) (*HealthCheckResponse, error)
+}
+
+// ActorHandler is called by an actor during `main` to generate a dispatch handler
+// The output of this call should be passed into `actor.RegisterHandlers`
+func ActorHandler() Handler {
+	return NewHandler("Actor", ActorReceiver{})
 }
 
 // ActorReceiver receives messages defined in the Actor service interface
@@ -743,7 +742,6 @@ func (r *ActorReceiver) dispatch(ctx *Context, svc Actor, message *Message) (*Me
 			encoder := msgpack.NewEncoder(buf)
 			enc := &encoder
 			resp.Encode(enc)
-
 			return &Message{Method: "Actor.HealthRequest", Arg: buf}, nil
 		}
 	default:
@@ -754,13 +752,6 @@ func (r *ActorReceiver) dispatch(ctx *Context, svc Actor, message *Message) (*Me
 // ActorSender sends messages to a Actor service
 // Actor service
 type ActorSender struct{ transport Transport }
-
-// NewActorSender constructs a client for actor-to-actor messaging
-// using the recipient actor's public key
-func NewActorActorSender(actor_id string) *ActorSender {
-	transport := ToActor(actor_id)
-	return &ActorSender{transport: transport}
-}
 
 // Perform health check. Called at regular intervals by host
 func (s *ActorSender) HealthRequest(ctx *Context, arg HealthCheckRequest) (*HealthCheckResponse, error) {
@@ -775,7 +766,6 @@ func (s *ActorSender) HealthRequest(ctx *Context, arg HealthCheckRequest) (*Heal
 	arg.Encode(enc)
 
 	out_buf, _ := s.transport.Send(ctx, Message{Method: "Actor.HealthRequest", Arg: buf})
-
 	d := msgpack.NewDecoder(out_buf)
 	resp, err_ := DecodeHealthCheckResponse(d)
 	if err_ != nil {

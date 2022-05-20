@@ -1,17 +1,18 @@
 package echo
 
-import "github.com/wasmcloud/actor-tinygo"
+import (
+	"github.com/wasmcloud/actor-tinygo"
+)
 
 func main() {
-	me := Echo{}
-	actor.RegisterHandler(me, "HttpServer", HttpServerReceiver{})
-	actor.RegisterHandler(me, "Actor", actor.ActorReceiver{})
+	actor.RegisterHandlers(Echo{},
+		httpserver.HttpServerHandler(), actor.ActorHandler())
 }
 
 type Echo struct{}
 
-func (e *Echo) HandleRequest(ctx *actor.Context, arg HttpRequest) (*HttpResponse, error) {
-	r := HttpResponse{
+func (e *Echo) HandleRequest(ctx *actor.Context, arg httpserver.HttpRequest) (*httpserver.HttpResponse, error) {
+	r := httpserver.HttpResponse{
 		StatusCode: 200,
 		Header:     make(HeaderMap, 0),
 		Body:       []byte("hello"),

@@ -6,6 +6,34 @@ import (
 	"unsafe"
 )
 
+/// Handler used to invoke callbacks when actor receives a message
+type Handler struct {
+	service  string
+	dispatch interface{}
+	actor    interface{}
+}
+
+/// Handler constructor - called by service (generated interface) during actor initialization
+/// Actor should use "R
+func NewHandler(service string, dispatch interface{}) Handler {
+	return Handler{service: service, dispatch: dispatch, actor: nil}
+}
+
+var allHandlers []Handler
+
+/// RegisterHandlers is called by actors during main()
+/// Example:
+/// ```
+/// me = MyActor{}
+/// actor.RegisterHandlers(me, actor.Handler(), httpserver.Handler())
+/// ```
+func RegisterHandlers(actor_ interface{}, handlers ...Handler) {
+	for _, h := range handlers {
+		h.actor = actor_
+		allHandlers = append(allHandlers, h)
+	}
+}
+
 func fail(errorMessage string) bool {
 	guestError(stringToPointer(errorMessage), uint32(len(errorMessage)))
 	return false
@@ -18,7 +46,7 @@ func guestCall(operationSize uint32, payloadSize uint32) bool {
 	guestRequest(bytesToPointer(operation), bytesToPointer(payload))
 
 	op := string(operation)
-	splits := strings.SplitN(op, ",", 2)
+	splits := strings.SplitN(op, ".", 2)
 	if len(splits) < 2 {
 		return fail("invalid operation: " + op)
 	}
@@ -29,11 +57,11 @@ func guestCall(operationSize uint32, payloadSize uint32) bool {
 	for _, handler := range allHandlers {
 		if handler.service == service {
 			disp, _ := handler.dispatch.(ServiceDispatch)
-			rc, err := disp.dispatch(&ctx, handler.actor, message)
+			msg, err := disp.dispatch(&ctx, handler.actor, message)
 			if err != nil {
 				return fail(op + ": " + err.Error())
 			}
-			guestResponse(bytesToPointer(rc.Arg), uint32(len(rc.Arg)))
+			guestResponse(bytesToPointer(msg.Arg), uint32(len(msg.Arg)))
 			return true
 		}
 	}
