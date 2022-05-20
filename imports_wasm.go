@@ -6,7 +6,7 @@ func guestRequest(operationPtr uintptr, payloadPtr uintptr)
 
 //go:wasm-module wasmbus
 //go:export __guest_response
-func guestResponse(ptr uintptr, len uint32)
+func guestResponse(ptr uintptr, len uint32) //nolint
 
 //go:wasm-module wasmbus
 //go:export __guest_error
