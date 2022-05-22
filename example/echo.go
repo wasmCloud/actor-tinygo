@@ -1,12 +1,13 @@
-package echo
+package main
 
 import (
 	"github.com/wasmcloud/actor-tinygo"
+	"github.com/wasmcloud/interfaces/httpserver/tinygo"
 )
 
 func main() {
-	actor.RegisterHandlers(Echo{},
-		httpserver.HttpServerHandler(), actor.ActorHandler())
+	me := Echo{}
+	actor.RegisterHandlers(httpserver.HttpServerHandler(&me), actor.ActorHandler(&me))
 }
 
 type Echo struct{}
@@ -14,7 +15,7 @@ type Echo struct{}
 func (e *Echo) HandleRequest(ctx *actor.Context, arg httpserver.HttpRequest) (*httpserver.HttpResponse, error) {
 	r := httpserver.HttpResponse{
 		StatusCode: 200,
-		Header:     make(HeaderMap, 0),
+		Header:     make(httpserver.HeaderMap, 0),
 		Body:       []byte("hello"),
 	}
 	return &r, nil

@@ -35,3 +35,7 @@ func hostErrorLen() uint32
 //go:wasm-module wasmbus
 //go:export __host_error
 func hostError(ptr uintptr)
+
+//go:wasm-module wasmbus
+//go:export __console_log
+func consoleLog(str uintptr, strLen uint32)
