@@ -12,7 +12,7 @@ func main() {
 
 type Echo struct{}
 
-func (e *Echo) HandleRequest(ctx *actor.Context, arg httpserver.HttpRequest) (*httpserver.HttpResponse, error) {
+func (e *Echo) HandleRequest(ctx *actor.Context, req httpserver.HttpRequest) (*httpserver.HttpResponse, error) {
 	r := httpserver.HttpResponse{
 		StatusCode: 200,
 		Header:     make(httpserver.HeaderMap, 0),
