@@ -6,30 +6,35 @@ import (
 	"unsafe"
 )
 
-/// Handler used to invoke callbacks when actor receives a message
+/// ServiceDispatch defines the interface that all Receivers implement
+type ServiceDispatch interface {
+	// dispatch calls the actor's registered handler for the operation
+	Dispatch(ctx *Context, actor interface{}, message *Message) (*Message, error)
+}
+
+// Handler used to invoke callbacks when actor receives a message
 type Handler struct {
 	service  string
-	dispatch interface{}
+	dispatch ServiceDispatch
 	actor    interface{}
 }
 
-/// Handler constructor - called by service (generated interface) during actor initialization
-/// Actor should use "R
-func NewHandler(service string, dispatch interface{}) Handler {
-	return Handler{service: service, dispatch: dispatch, actor: nil}
+// NewHandler constructor - called by service (generated interface) during actor initialization
+// Not used directly by actors. Actors should use RegisterHandlers
+func NewHandler(service string, dispatch ServiceDispatch, actor interface{}) Handler {
+	return Handler{service: service, dispatch: dispatch, actor: actor}
 }
 
 var allHandlers []Handler
 
-/// RegisterHandlers is called by actors during main()
-/// Example:
-/// ```
-/// me = MyActor{}
-/// actor.RegisterHandlers(me, actor.Handler(), httpserver.Handler())
-/// ```
-func RegisterHandlers(actor_ interface{}, handlers ...Handler) {
+// RegisterHandlers is called by actors during main()
+// Example:
+// ```
+// me = MyActor{}
+// actor.RegisterHandlers(me, actor.Handler(), httpserver.Handler())
+// ```
+func RegisterHandlers(handlers ...Handler) {
 	for _, h := range handlers {
-		h.actor = actor_
 		allHandlers = append(allHandlers, h)
 	}
 }
@@ -40,12 +45,13 @@ func fail(errorMessage string) bool {
 }
 
 //go:export __guest_call
-func guestCall(operationSize uint32, payloadSize uint32) bool {
+func guestCall(operationSize uint32, payloadSize uint32) bool { //nolint
 	operation := make([]byte, operationSize) // alloc
 	payload := make([]byte, payloadSize)     // alloc
 	guestRequest(bytesToPointer(operation), bytesToPointer(payload))
 
 	op := string(operation)
+
 	splits := strings.SplitN(op, ".", 2)
 	if len(splits) < 2 {
 		return fail("invalid operation: " + op)
@@ -56,8 +62,7 @@ func guestCall(operationSize uint32, payloadSize uint32) bool {
 	message := Message{Method: method, Arg: payload}
 	for _, handler := range allHandlers {
 		if handler.service == service {
-			disp, _ := handler.dispatch.(ServiceDispatch)
-			msg, err := disp.dispatch(&ctx, handler.actor, message)
+			msg, err := handler.dispatch.Dispatch(&ctx, handler.actor, &message)
 			if err != nil {
 				return fail(op + ": " + err.Error())
 			}

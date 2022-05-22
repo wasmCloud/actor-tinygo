@@ -37,12 +37,6 @@ func (t *Transport) Send(ctx *Context, msg Message) ([]byte, error) {
 	return r, ok
 }
 
-/// ServiceDispatch defines the interface that all Receivers implement
-type ServiceDispatch interface {
-	// dispatch calls the actor's registered handler for the operation
-	dispatch(ctx *Context, actor interface{}, message Message) (*Message, error)
-}
-
 /// RpcError is an error type emitted by the rpc infrastructure
 type RpcError struct {
 	kind    string
@@ -73,3 +67,10 @@ type Timestamp struct {
 
 /// Document is an 'any' type interface and is not currently implemented for TinyGo actors
 type Document struct{}
+
+// ConsoleLog sends log message to host console.
+// For internal use - Actors should use the logging capability provider for logging
+// Deprecated - support for this function may go away
+func ConsoleLog(msg string) {
+	consoleLog(stringToPointer(msg), uint32(len(msg)))
+}

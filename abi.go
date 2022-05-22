@@ -1,6 +1,6 @@
 package actor
 
-// Performs a "host call" - a request from the actor to either invoke another actor
+// HostCall performs a "host call" - a request from the actor to either invoke another actor
 // or invoke an operation on a linked capability provider.
 //
 // binding - this is either the link name (e.g. "default") or, in the case of an actor-to-actor call, the public key or call alias of the target
@@ -30,12 +30,12 @@ func HostCall(binding, namespace, operation string, payload []byte) ([]byte, err
 	return response, nil
 }
 
-/// HostError is returned by the host from HostCall
+// HostError is returned by the host from HostCall
 type HostError struct {
 	message string
 }
 
-/// Error implements the error interface for HostError
+// Error implements the error interface for HostError
 func (e *HostError) Error() string {
 	return "Host error: " + e.message
 }

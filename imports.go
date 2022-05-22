@@ -2,11 +2,11 @@
 
 package actor
 
-func guestRequest(operationPtr uintptr, payloadPtr uintptr) {}
+func guestRequest(operationPtr uintptr, payloadPtr uintptr) {} //nolint
 
 func guestResponse(ptr uintptr, len uint32) {}
 
-func guestError(ptr uintptr, len uint32) {}
+func guestError(ptr uintptr, len uint32) {} //nolint
 
 func hostCall(
 	bindingPtr uintptr, bindingLen uint32,
@@ -23,3 +23,5 @@ func hostResponse(ptr uintptr) {}
 func hostErrorLen() uint32 { return 0 }
 
 func hostError(ptr uintptr) {}
+
+func consoleLog(ptr uintptr, sz uint32) {}
