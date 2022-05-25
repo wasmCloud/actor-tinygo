@@ -21,8 +21,3 @@ func (e *Echo) HandleRequest(ctx *actor.Context, req httpserver.HttpRequest) (*h
 	return &r, nil
 }
 
-func (e *Echo) HealthRequest(ctx *actor.Context, arg actor.HealthCheckRequest) (*actor.HealthCheckResponse, error) {
-	var r actor.HealthCheckResponse
-	r.Healthy = true
-	return &r, nil
-}
