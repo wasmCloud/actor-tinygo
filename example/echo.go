@@ -1,13 +1,13 @@
 package main
 
 import (
-	"github.com/wasmcloud/actor-tinygo"
+	actor "github.com/wasmcloud/interfaces/core/tinygo"
 	"github.com/wasmcloud/interfaces/httpserver/tinygo"
 )
 
 func main() {
 	me := Echo{}
-	actor.RegisterHandlers(httpserver.HttpServerHandler(&me), actor.ActorHandler(&me))
+	actor.RegisterHandlers(httpserver.HttpServerHandler(&me))
 }
 
 type Echo struct{}
