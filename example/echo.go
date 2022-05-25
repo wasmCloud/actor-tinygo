@@ -1,7 +1,7 @@
 package main
 
 import (
-	actor "github.com/wasmcloud/interfaces/core/tinygo"
+	"github.com/wasmcloud/actor-tinygo"
 	"github.com/wasmcloud/interfaces/httpserver/tinygo"
 )
 
