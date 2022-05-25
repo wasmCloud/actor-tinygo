@@ -1,2 +1,3 @@
 *.wasm
 .idea
+example/example
