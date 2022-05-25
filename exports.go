@@ -6,7 +6,7 @@ import (
 	"unsafe"
 )
 
-/// ServiceDispatch defines the interface that all Receivers implement
+// ServiceDispatch defines the interface that all Receivers implement
 type ServiceDispatch interface {
 	// dispatch calls the actor's registered handler for the operation
 	Dispatch(ctx *Context, actor interface{}, message *Message) (*Message, error)
@@ -34,8 +34,16 @@ var allHandlers []Handler
 // actor.RegisterHandlers(me, actor.Handler(), httpserver.Handler())
 // ```
 func RegisterHandlers(handlers ...Handler) {
+	implementsActor := false
 	for _, h := range handlers {
+		if h.service == "Actor" {
+			implementsActor = true
+		}
 		allHandlers = append(allHandlers, h)
+	}
+	if !implementsActor {
+		// register default health responder
+		allHandlers = append(allHandlers, ActorHandler(&DefaultResponder{}))
 	}
 }
 
@@ -44,8 +52,17 @@ func fail(errorMessage string) bool {
 	return false
 }
 
+// default health check responder
+type DefaultResponder struct{}
+
+func (hc *DefaultResponder) HealthRequest(ctx *Context, arg HealthCheckRequest) (*HealthCheckResponse, error) {
+	var r HealthCheckResponse
+	r.Healthy = true
+	return &r, nil
+}
+
 //go:export __guest_call
-func guestCall(operationSize uint32, payloadSize uint32) bool { //nolint
+func guestCall(operationSize uint32, payloadSize uint32) bool { // nolint
 	operation := make([]byte, operationSize) // alloc
 	payload := make([]byte, payloadSize)     // alloc
 	guestRequest(bytesToPointer(operation), bytesToPointer(payload))

@@ -7,7 +7,7 @@ import (
 
 func main() {
 	me := Echo{}
-	actor.RegisterHandlers(httpserver.HttpServerHandler(&me), actor.ActorHandler(&me))
+	actor.RegisterHandlers(httpserver.HttpServerHandler(&me))
 }
 
 type Echo struct{}
