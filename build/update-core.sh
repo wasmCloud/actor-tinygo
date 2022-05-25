@@ -6,7 +6,5 @@
 #   build/update-core.sh
 
 WASH=wash
-#WASH=../wash/target/debug/wash
-
 $WASH gen -c build/codegen.toml
 
