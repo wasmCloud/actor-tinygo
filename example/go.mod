@@ -8,7 +8,7 @@ require (
 )
 
 require (
-	github.com/stretchr/testify v1.7.1 // indirect
 	github.com/wasmcloud/tinygo-cbor v0.1.0 // indirect
 	github.com/wasmcloud/tinygo-msgpack v0.1.4 // indirect
+	gopkg.in/yaml.v3 v3.0.0 // indirect
 )
