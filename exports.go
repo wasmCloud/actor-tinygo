@@ -4,6 +4,8 @@ import (
 	"reflect"
 	"strings"
 	"unsafe"
+
+	core "github.com/wasmcloud/interfaces/core/tinygo"
 )
 
 // ServiceDispatch defines the interface that all Receivers implement
@@ -55,8 +57,8 @@ func fail(errorMessage string) bool {
 // default health check responder
 type DefaultResponder struct{}
 
-func (hc *DefaultResponder) HealthRequest(ctx *Context, arg HealthCheckRequest) (*HealthCheckResponse, error) {
-	var r HealthCheckResponse
+func (hc *DefaultResponder) HealthRequest(ctx *Context, arg core.HealthCheckRequest) (*core.HealthCheckResponse, error) {
+	var r core.HealthCheckResponse
 	r.Healthy = true
 	return &r, nil
 }

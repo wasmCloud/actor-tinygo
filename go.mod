@@ -7,4 +7,4 @@ require (
 	github.com/wasmcloud/tinygo-msgpack v0.1.4
 )
 
-require gopkg.in/yaml.v3 v3.0.0 // indirect
+require github.com/wasmcloud/interfaces/core/tinygo v0.0.1

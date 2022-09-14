@@ -1,0 +1,16 @@
+# codegen.toml
+
+[[models]]
+path = "."
+files = [ "wasmcloud-actor.smithy" ]
+
+[[models]]
+url = "https://wasmcloud.github.io/interfaces/idl/org.wasmcloud"
+files = [ "wasmcloud-core.smithy", "wasmcloud-model.smithy" ]
+
+[tinygo]
+output_dir = ""
+formatter = [ "goimports", "-w" ]
+files = [
+    { path = "actor.go", package="actor", namespace = "org.wasmcloud.actor" },
+]
