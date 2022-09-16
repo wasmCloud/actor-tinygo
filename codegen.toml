@@ -8,7 +8,7 @@ files = [ "wasmcloud-actor.smithy" ]
 output_dir = ""
 formatter = [ "goimports", "-w" ]
 files = [
-    { path = "tinygo/actor.go", package="actor", namespace = "org.wasmcloud.actor" },
+    { path = "actor.go", package="actor", namespace = "org.wasmcloud.actor" },
 ]
 
 
