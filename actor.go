@@ -2,11 +2,9 @@
 package actor
 
 import (
-	"errors"
-
-	core "github.com/wasmcloud/interfaces/core/tinygo"
-	cbor "github.com/wasmcloud/tinygo-cbor"       //nolint
-	msgpack "github.com/wasmcloud/tinygo-msgpack" //nolint
+	core "github.com/wasmcloud/interfaces/core/tinygo" //nolint
+	cbor "github.com/wasmcloud/tinygo-cbor"            //nolint
+	msgpack "github.com/wasmcloud/tinygo-msgpack"      //nolint
 )
 
 type Context struct {
@@ -158,8 +156,8 @@ func CDecodeDocument(d *cbor.Decoder) (Document, error) {
 }
 
 type Message struct {
-	Arg    []byte
-	Method string
+	Arg    []byte `json:"Arg"`
+	Method string `json:"Method"`
 }
 
 // MEncode serializes a Message using msgpack
@@ -198,8 +196,7 @@ func MDecodeMessage(d *msgpack.Decoder) (Message, error) {
 			err = d.Skip()
 		}
 		if err != nil {
-			return val, errors.New(err.Error() + " d:" + field)
-			//return val, err
+			return val, err
 		}
 	}
 	return val, nil
@@ -251,8 +248,8 @@ func CDecodeMessage(d *cbor.Decoder) (Message, error) {
 }
 
 type Timestamp struct {
-	Nsec uint32
-	Sec  int64
+	Nsec uint32 `json:"Nsec"`
+	Sec  int64  `json:"Sec"`
 }
 
 // MEncode serializes a Timestamp using msgpack
@@ -343,8 +340,8 @@ func CDecodeTimestamp(d *cbor.Decoder) (Timestamp, error) {
 }
 
 type Transport struct {
-	Binding   string
-	Namespace string
+	Binding   string `json:"binding"`
+	Namespace string `json:"namespace"`
 }
 
 // MEncode serializes a Transport using msgpack
@@ -512,4 +509,4 @@ func (s *ActorSender) HealthRequest(ctx *Context, arg core.HealthCheckRequest) (
 	return &resp, nil
 }
 
-// This file is generated automatically using wasmcloud/weld-codegen 0.4.5
+// This file is generated automatically using wasmcloud/weld-codegen 0.5.1

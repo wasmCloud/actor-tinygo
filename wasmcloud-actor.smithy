@@ -45,4 +45,3 @@ structure Message {
     Method: String,
     Arg: Blob,
 }
-

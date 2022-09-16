@@ -1,3 +1,4 @@
 *.wasm
 .idea
 example/example
+go.work
