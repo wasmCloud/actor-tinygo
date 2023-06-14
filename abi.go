@@ -15,6 +15,7 @@ func HostCall(binding, namespace, operation string, payload []byte) ([]byte, err
 		stringToPointer(operation), uint32(len(operation)),
 		bytesToPointer(payload), uint32(len(payload)),
 	)
+
 	if !result {
 		errorLen := hostErrorLen()
 		message := make([]byte, errorLen)
