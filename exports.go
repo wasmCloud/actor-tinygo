@@ -91,11 +91,11 @@ func guestCall(operationSize uint32, payloadSize uint32) bool { // nolint
 }
 
 //go:inline
-func bytesToPointer(s []byte) uintptr {
-	return (*(*reflect.SliceHeader)(unsafe.Pointer(&s))).Data
+func bytesToPointer(s []byte) uint32 {
+	return uint32((*(*reflect.SliceHeader)(unsafe.Pointer(&s))).Data)
 }
 
 //go:inline
-func stringToPointer(s string) uintptr {
-	return (*(*reflect.StringHeader)(unsafe.Pointer(&s))).Data
+func stringToPointer(s string) uint32 {
+	return uint32((*(*reflect.StringHeader)(unsafe.Pointer(&s))).Data)
 }
