@@ -1,3 +1,6 @@
+
+> **Archived:** This repository is no longer maintained and will not receive updates or security fixes. It belongs to an earlier version of wasmCloud. For current wasmCloud, see https://github.com/wasmCloud/wasmCloud.
+
 # wasmCloud TinyGo Actor SDK
 This module is for those looking to develop [wasmCloud](https://wasmcloud.dev) actors using [TinyGo](https://tinygo.org). Typically you won't use this module directly, as it will be referenced by one or more code generate modules containing strongly-typed structs and wrappers around function handler registration.
 
